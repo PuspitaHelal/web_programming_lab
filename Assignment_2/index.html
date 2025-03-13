@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>To-Do List</title>
+        <style>
+
+            body {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+                background-color: #f4f4f4;
+            }
+            #app {
+                background:white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                text-align: center;
+                width: 300px;
+            }
+            ul {
+                list-style: none;
+                padding: 0;
+            }
+            li {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 8px;
+                background: #eee;
+                margin: 5px 0;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            .delete-button {
+                background: red;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                cursor: pointer;
+                border-radius: 5px;
+                font-size: 12px;
+            }
+            .delete-button:hover {
+                background: darkred;
+            }
+
+        </style>
+    </head>
+    <body>
+
+        <div id="app">
+            <h1>To-Do List</h1>
+            <input type="text" id="new-todo" placeholder="Add to-do list" />
+            <button id="add-todo">Add</button>
+            <ul id="todo-list"></ul>
+        </div>
+
+        <script>
+            const todoApp = () => {
+                let todos = [];
+
+                function createTodoItem(todo, index) {
+                    const li = document.createElement("li");
+                    li.innerText = todo.text;
+                    li.style.textDecoration = todo.completed
+                        ? "line-through"
+                        : "none";
+
+                    li.addEventListener("click", () => {
+                        todos[index].completed = !todos[index].completed;
+                        render();
+                    });
+
+                    const deleteButton = document.createElement("button");
+                    deleteButton.innerText = "Delete";
+                    deleteButton.classList.add("delete-button");
+                    deleteButton.addEventListener("click", (e) => {
+                        e.stopPropagation();
+                        todos.splice(index, 1);
+                        render();
+                    });
+
+                    li.appendChild(deleteButton);
+                    return li;
+                }
+
+                function render() {
+                    const todoList = document.getElementById("todo-list");
+                    todoList.innerHTML = "";
+
+                    todos.forEach((todo, index) => {
+                        todoList.appendChild(createTodoItem(todo, index));
+                    });
+                }
+
+                function addTodo() {
+                    const input = document.getElementById("new-todo");
+                    const text = input.value.trim();
+                    if (text !== "") {
+                        todos.push({ text, completed: false });
+                        input.value = "";
+                        render();
+                    }
+                }
+
+                document
+                    .getElementById("add-todo")
+                    .addEventListener("click", addTodo);
+            };
+
+            todoApp();
+        </script>
+    </body>
+</html>
